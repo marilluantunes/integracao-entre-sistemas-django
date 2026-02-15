@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class VinculacaoConfig(AppConfig):
-    name = 'vinculacao'
+class IntegracaoConfig(AppConfig):
+    name = 'integracao'
