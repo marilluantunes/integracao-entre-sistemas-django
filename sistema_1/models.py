@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 
-class UsuarioSistema1(models.Model):
+class AlunoSistema1(models.Model):
 
     STATUS_CHOICE = [ 
         ('ativo' , 'Ativo'),
