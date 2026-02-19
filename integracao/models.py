@@ -30,7 +30,7 @@ class Vinculacao(models.Model):
     
 class Nota(models.Model):
     aluno_sistema2 = models.ForeignKey(AlunoSistema2, on_delete=models.CASCADE, related_name='notas') # 1- N
-    disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE, related_name='notas') # 1 - N 
+    disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE, related_name='notas_da_disciplina') # 1 - N 
     valor = models.DecimalField(max_digits=5, decimal_places=2)
     data_lancamento = models.DateTimeField(auto_now_add=True)
     enviada_para_sistema1 = models.BooleanField(default=False)

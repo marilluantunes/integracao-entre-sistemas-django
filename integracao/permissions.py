@@ -16,13 +16,13 @@ class PemissaoBase(p.BasePermission):
     
 
 class PermissaoProfessor(p.BasePermission):
-    # so professor pode lancar nota
+    # so professor pode lancar/modificar nota
 
     def has_permission(self, request, view):
         user = request.user
         if not user.is_authenticated:
             return False
         
-        # suoeruser ou professor
+        # superuser ou professor
         return request.user.is_superuser or request.user.groups.filter(name='Professores').exists()
         
