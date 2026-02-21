@@ -5,7 +5,7 @@ from .models import AlunoSistema1
 class AlunoSistema1Serializer(serializers.ModelSerializer):
     class Meta:
         model =  AlunoSistema1
-        fields = ['id', 'user', 'nome', 'email', 'cpf', 'matricula', 'status','created_at']
+        fields = ['id'  , 'nome' , 'cpf', 'matricula', 'status','created_at']
         realy_only_fields = ['created_at']
 
     def validate_cpf(self,value):
