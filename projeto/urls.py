@@ -1,22 +1,41 @@
-"""
-URL configuration for integracao project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/6.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from integracao import views  as integracao_views
+from sistema_1 import views as sistema1_views
+from sistema_2 import views as sistema2_views
+
+
+
+router = DefaultRouter()
+router.register(r'vinculacoes' , integracao_views.VinculacaoViewSet)
+router.register(r'notas' , integracao_views.NotaViewSet)
+router.register(r'disciplinas' , integracao_views.DisciplinaViewSet)
+#suap
+router.register(r'sistema 1' , sistema1_views.AlunoSistema1ViewSet)
+#moodle
+router.register(r'sistema 2' , sistema2_views.AlunoMoodleViewSet)
+
+
+#sistema 1 (suap)
+#router_sistema1 = DefaultRouter()
+#router_sistema1.register(r'alunos' , sistema1_views.AlunoSistema1ViewSet)
+
+
+
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    path('api/', include(router.urls)),
+
+   # path('api/sistema1/', include(router_sistema1.urls)),
+
+     #generics
+    path('api/solicitar-acesso-moodle/', integracao_views.VerificarCpfView.as_view()),
+    path('api/criar-senha/', integracao_views.CriarSenhaView.as_view()),
+    path('api/login-moodle/', integracao_views.LoginView.as_view()),
+
+    path('api-auth/', include('rest_framework.urls')),
 ]
