@@ -11,11 +11,11 @@ class AlunoSistema1(models.Model):
         ('pendente' , 'Pendente'),
     ]
     
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    #user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     nome = models.CharField(max_length=100, verbose_name="Nome completo")
-    email = models.EmailField(unique=True, verbose_name= "E-mail")
-    cpf = models.CharField(max_length=11, unique=True, verbose_name="CPF")
-    matricula = models.CharField(max_length=10, blank=True, null=True, verbose_name="Matrícula")
+    email = models.EmailField(blank= True, verbose_name= "E-mail")
+    cpf = models.CharField(max_length=11, verbose_name="CPF")
+    matricula = models.CharField(max_length=10, unique=True, verbose_name="Matrícula")
     status = models.CharField(max_length=10, choices=STATUS_CHOICE,  default='ativo')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Criando em")
 
@@ -25,6 +25,6 @@ class AlunoSistema1(models.Model):
         ordering = ['nome']
 
     def __str__(self):
-        return f"{self.nome} - {self.cpf}"
+        return f"{self.nome} - {self.matricula}"
 
 
