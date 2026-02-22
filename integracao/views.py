@@ -1,22 +1,14 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User, Group
-from django.shortcuts import render
 from rest_framework import status, viewsets, generics
-from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
-from rest_framework.views import APIView
+from rest_framework.reverse import reverse
 from sistema_1.models import AlunoSistema1
 from sistema_2.models import AlunoSistema2
 from .models import Vinculacao, Nota, Disciplina
-from .serializers import ( VinculacaoSerializer,  NotaSerializer, DisciplinaSerializer, SolicitacaoAcessoSerializer,  CriarSenhaSerializer, LoginSerializer)
+from .serializers import ( VinculacaoSerializer,  NotaSerializer, DisciplinaSerializer, SolicitacaoAcessoSerializer,  CriarSenhaSerializer, LoginSerializer, BoletimSerializer)
 from .permissions import PermissaoBase, PermissaoProfessor
-
-
-# No seu arquivo views.py, adicione:
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework.reverse import reverse
 
 # Create your views here.
 
@@ -44,12 +36,19 @@ class VerificarCpfView(generics.GenericAPIView):
         request.session['nome'] = dados['nome']
         request.session['aluno_suap_id'] = dados['aluno_suap'].id
 
+        criar_senha_url = reverse('criar-senha', request=request) #gera o link para criar a senha 
+
         return Response({
             'sucesso': True,
             'mensagem': 'CPF verificado! Agora crie uma senha.',
             'matricula': dados['aluno_suap'].matricula,
-            'nome': dados['aluno_suap'].nome
-        })
+            'nome': dados['aluno_suap'].nome,
+            'proximo_passo': {
+            'acao' : 'Crie uma senha para finalizar o cadastro no Moodle , clique no link abaixo',
+            'url': criar_senha_url 
+            },
+        }
+        )
 
 
 
@@ -136,11 +135,17 @@ class CriarSenhaView(generics.GenericAPIView):
             # limpa sessão
             request.session.flush()
 
+            login_moodle_url = reverse('login-moodle' , request=request)
+
             return Response({
                 'sucesso': True,
                 'mensagem': 'Cadastro realizado com sucesso!',
                 'email_utilizado': email_sessao,
-                'email_suap_atualizado': email_atualizado,
+               # 'email_suap_atualizado': email_atualizado,
+               'Proximo Passo' : {
+                   'acao' : 'Faça login no Moodle!! , clique no link',
+                   'url' : login_moodle_url
+               },
                 'grupo': 'Aluno'
             }, status=status.HTTP_201_CREATED)
         
@@ -185,17 +190,23 @@ class LoginView(generics.GenericAPIView):
             user = authenticate(username=aluno.matricula  , password= senha)
 
             if user:
+                boletim_url = reverse('boletim', args=[aluno.id], request=request)            
 
                 return Response({
-                    'aluno' : {
+                    'sucesso': True,
+                    'mensagem': 'Login realizado com sucesso!',
+                    'aluno': {
                         'id': aluno.id,
-                        'nome' : aluno.nome,
-                        'matricula' : aluno.matricula,
+                        'nome': aluno.nome,
+                        'matricula': aluno.matricula,
                         'email': aluno.email,
-                        'status' : aluno.status
+                        'status': aluno.status
+                    },
+                    'links': {
+                        'boletim': boletim_url
                     }
                 })
-            
+
             return Response({
                 'erro' : 'cpf oy senha inválidos'
             } , status = status.HTTP_404_NOT_FOUND)
@@ -227,11 +238,15 @@ class DisciplinaViewSet(viewsets.ModelViewSet):
     permission_classes = [PermissaoBase]
 
 
+class BoletimView(generics.GenericAPIView):
+    serializer_class = BoletimSerializer
+    queryset = AlunoSistema2.objects.all()
+    renderer_classes = [BrowsableAPIRenderer, JSONRenderer]
 
-
-    # =======================================================
-
-
+    def get(self, request, pk):
+        aluno = self.get_object()
+        serializer = self.get_serializer(aluno)
+        return Response(serializer.data)
 
 
 

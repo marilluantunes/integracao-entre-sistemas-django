@@ -1,4 +1,6 @@
 from django.db import models
+from datetime import datetime
+
 from sistema_1.models import AlunoSistema1
 from sistema_2.models import AlunoSistema2
 
@@ -43,3 +45,6 @@ class Nota(models.Model):
 
     def __str__(self):
         return f"{self.aluno_sistema2.nome} - {self.disciplina.nome}: {self.valor} "
+    
+
+

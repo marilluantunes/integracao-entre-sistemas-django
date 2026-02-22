@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Disciplina, Vinculacao, Nota
 from sistema_1.models import AlunoSistema1
 from sistema_2.models import AlunoSistema2
+import re
 
 
 class SolicitacaoAcessoSerializer(serializers.Serializer):
@@ -101,3 +102,46 @@ class NotaSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError('Nota deve estar entre 0 e 10')
             
             return value
+        
+
+
+class BoletimSerializer(serializers.Serializer):
+    aluno = serializers.SerializerMethodField()
+    disciplinas = serializers.SerializerMethodField()
+
+    def get_aluno(self, obj):
+        return {
+        #    'id': obj.id,
+            'nome': obj.nome,
+            'matricula': obj.matricula, 
+            'email': obj.email,
+            'status': obj.status
+        }
+    
+    def get_disciplinas(self, obj):
+        notas = obj.notas.all().select_related('disciplina') # ja carrega os dados da disciplina JUNTO com a nota
+        disciplinas_dict = {}
+
+        for nota in notas:
+            disc_id = nota.disciplina.id
+            if disc_id not in disciplinas_dict:
+                disciplinas_dict[disc_id] = {
+                    'id': disc_id,
+                    'nome': nota.disciplina.nome,
+                    'codigo': nota.disciplina.codigo,
+                    'notas': [],
+                }
+        
+            disciplinas_dict[disc_id]['notas'].append(float(nota.valor))
+
+        # calcular a mdia
+        for disc in disciplinas_dict.values():
+            disc['media'] = sum(disc['notas']) / len(disc['notas']) if disc['notas'] else 0
+
+        return {
+            'Lista Da Disciplinas': list(disciplinas_dict.values()), #pega so os valores , sem as chaves
+            'total de disicplinas': len(disciplinas_dict)
+        }
+    
+
+
