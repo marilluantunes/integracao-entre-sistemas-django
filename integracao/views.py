@@ -49,7 +49,8 @@ class VerificarCpfView(generics.GenericAPIView):
             },
         }
         )
-
+    def get_view_name(self):
+        return "Solicitar Acesso ao Moodle"
 
 
 class CriarSenhaView(generics.GenericAPIView):

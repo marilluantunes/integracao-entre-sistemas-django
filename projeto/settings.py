@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'sistema_1' ,
     'sistema_2' , 
     'integracao' ,
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -75,11 +76,11 @@ WSGI_APPLICATION = 'projeto.wsgi.application'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-       # 'rest_framework.renderers.JSONRenderer',
-     #   'rest_framework.renderers.BrowsableAPIRenderer', 
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ],
+
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 
