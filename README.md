@@ -10,6 +10,24 @@ Funcionários cadastram alunos no SUAP, que então passam por um fluxo de autoat
 ### Fase: Em desenvolvimento
  Funcionalidades novas estão planejadas para versões futuras
 
+
+ ##  Criando um Superusuário
+
+**⚠️ Nota:** Por enquanto, o cadastro de usuários com permissões (funcionários e professores) precisa ser feito manualmente via admin ou shell. Futuramente isso será automatizado.
+
+### 1. Crie um superusuário
+```bash
+# No terminal, dentro da pasta do projeto
+python manage.py createsuperuser
+```
+
+#### 👨‍🎓 **Alunos (automático)**
+- **Não precisam ser criados manualmente!**
+- São criados automaticamente ao passar pelo fluxo de cadastro da API:
+  1. `POST /api/solicitar-acesso-moodle/` (verificar CPF)
+  2. `POST /api/criar-senha/` (criar senha)
+- Já são vinculados ao grupo **"Alunos"** automaticamente
+
 ## Tecnologias
 
 - Django 6.0
