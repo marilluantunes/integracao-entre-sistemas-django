@@ -23,7 +23,7 @@ urlpatterns = [
     
     path('api/',  guia.guia_api, name='api-docs'),
     
-    #path('api/', include(router.urls)),
+    path('api/', include(router.urls)),
     
 
     path('api/solicitar-acesso-moodle/', 
