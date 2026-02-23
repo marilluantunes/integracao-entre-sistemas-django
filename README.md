@@ -29,7 +29,7 @@ O projeto utiliza o sistema de **grupos do Django** para gerenciar permissões d
 
  ##  Criando um Superusuário
 
-**⚠️ Nota:** Por enquanto, o cadastro de usuários com permissões (funcionários e professores) precisa ser feito manualmente via admin ou shell. Futuramente isso será automatizado.
+**Nota:** Por enquanto, o cadastro de usuários com permissões (funcionários e professores) precisa ser feito manualmente via admin ou shell. Futuramente isso será automatizado.
 
 ### 1. Crie um superusuário
 ```bash
