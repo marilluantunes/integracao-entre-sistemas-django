@@ -1,11 +1,27 @@
 # Integração SUAP-Moodle
 
+**Desenvolvido por:** Maria Luiza Antunes  
+
 API REST para integração entre sistema acadêmico SUAP e plataforma Moodle.
 
 ## 
 ## Sobre
 
 Funcionários cadastram alunos no SUAP, que então passam por um fluxo de autoatendimento para acessar o Moodle. A vinculação entre os sistemas é automática. Professores lançam notas, e alunos consultam seu boletim.
+
+
+## Sistema de Grupos e Permissões
+
+O projeto utiliza o sistema de **grupos do Django** para gerenciar permissões de acesso.
+
+###  Grupos disponíveis
+
+| Grupo | Permissões | Criado por |
+|-------|------------|------------|
+| **Alunos** | Acesso ao próprio boletim e dados pessoais | ✅ Automático (via fluxo da API) |
+| **Professores** | Lançar e visualizar notas | ⚠️ Manual (admin/shell) |
+| **Funcionarios** | CRUD de alunos, disciplinas e vinculações | ⚠️ Manual (admin/shell) |
+| **Superusuário** | Acesso total ao sistema | `createsuperuser` |
 
 ### Fase: Em desenvolvimento
  Funcionalidades novas estão planejadas para versões futuras
@@ -20,13 +36,6 @@ Funcionários cadastram alunos no SUAP, que então passam por um fluxo de autoat
 # No terminal, dentro da pasta do projeto
 python manage.py createsuperuser
 ```
-
-#### 👨‍🎓 **Alunos (automático)**
-- **Não precisam ser criados manualmente!**
-- São criados automaticamente ao passar pelo fluxo de cadastro da API:
-  1. `POST /api/solicitar-acesso-moodle/` (verificar CPF)
-  2. `POST /api/criar-senha/` (criar senha)
-- Já são vinculados ao grupo **"Alunos"** automaticamente
 
 ## Tecnologias
 
